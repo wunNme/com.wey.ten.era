@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wey.ten.era.rbac.base.mapper.AppClazzMapper">
+
+	<resultMap type="AppClazz" id="AppClazzResult">
+		<id     property="appClazzId"     column="app_clazz_id"     />
+		<result property="parentId"   column="parent_id"   />
+		<result property="ancestors"  column="ancestors"   />
+		<result property="clazzName"   column="clazz_name"   />
+		<result property="orderNum"   column="order_num"   />
+		<result property="leader"     column="leader"      />
+		<result property="phone"      column="phone"       />
+		<result property="email"      column="email"       />
+		<result property="status"     column="status"      />
+		<result property="delFlag"    column="del_flag"    />
+		<result property="parentName" column="parent_name" />
+		<result property="createBy"   column="create_by"   />
+		<result property="createTime" column="create_time" />
+		<result property="updateBy"   column="update_by"   />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	
+	<sql id="selectAppClazzVo">
+        select d.app_clazz_id, d.parent_id, d.ancestors, d.clazz_name, d.order_num, d.leader, d.phone, d.email, d.status, d.del_flag, d.create_by, d.create_time 
+        from base_app_clazz d
+    </sql>
+    
+	<select id="selectAppClazzList" parameterType="AppClazz" resultMap="AppClazzResult">
+        <include refid="selectAppClazzVo"/>
+        where d.del_flag = '0'
+        <if test="parentId != null and parentId != 0">
+			AND parent_id = #{parentId}
+		</if>
+		<if test="clazzName != null and clazzName != ''">
+			AND clazz_name like concat('%', #{clazzName}, '%')
+		</if>
+		<if test="status != null and status != ''">
+			AND status = #{status}
+		</if>
+		order by d.parent_id, d.order_num
+    </select>
+    
+    <select id="selectAppClazzById" parameterType="Long" resultMap="AppClazzResult">
+		<include refid="selectAppClazzVo"/>
+		where app_clazz_id = #{appClazzId}
+	</select>
+    
+    <select id="checkAppClazzExistUser" parameterType="Long" resultType="int">
+		select count(1) from sys_user where app_clazz_id = #{appClazzId} and del_flag = '0'
+	</select>
+	
+	<select id="hasChildByAppClazzId" parameterType="Long" resultType="int">
+		select count(1) from base_app_clazz
+		where del_flag = '0' and parent_id = #{appClazzId}
+	</select>
+	
+	<select id="selectChildrenAppClazzById" parameterType="Long" resultMap="AppClazzResult">
+		select * from base_app_clazz where find_in_set(#{appClazzId}, ancestors)
+	</select>
+	
+	<select id="selectNormalChildrenAppClazzById" parameterType="Long" resultType="java.lang.Integer">
+		select count(*) from base_app_clazz where status = 0 and del_flag = '0' and find_in_set(#{appClazzId}, ancestors)
+	</select>
+	
+	<select id="checkAppClazzNameUnique" resultMap="AppClazzResult">
+	    <include refid="selectAppClazzVo"/>
+		where clazz_name=#{clazzName} and parent_id = #{parentId}
+	</select>
+    
+    <insert id="insertAppClazz" parameterType="AppClazz">
+ 		insert into base_app_clazz(
+ 			<if test="appClazzId != null and appClazzId != 0">app_clazz_id,</if>
+ 			<if test="parentId != null and parentId != 0">parent_id,</if>
+ 			<if test="clazzName != null and clazzName != ''">clazz_name,</if>
+ 			<if test="ancestors != null and ancestors != ''">ancestors,</if>
+ 			<if test="orderNum != null and orderNum != ''">order_num,</if>
+ 			<if test="leader != null and leader != ''">leader,</if>
+ 			<if test="phone != null and phone != ''">phone,</if>
+ 			<if test="email != null and email != ''">email,</if>
+ 			<if test="status != null">status,</if>
+ 			<if test="createBy != null and createBy != ''">create_by,</if>
+ 			create_time
+ 		)values(
+ 			<if test="appClazzId != null and appClazzId != 0">#{appClazzId},</if>
+ 			<if test="parentId != null and parentId != 0">#{parentId},</if>
+ 			<if test="clazzName != null and clazzName != ''">#{clazzName},</if>
+ 			<if test="ancestors != null and ancestors != ''">#{ancestors},</if>
+ 			<if test="orderNum != null and orderNum != ''">#{orderNum},</if>
+ 			<if test="leader != null and leader != ''">#{leader},</if>
+ 			<if test="phone != null and phone != ''">#{phone},</if>
+ 			<if test="email != null and email != ''">#{email},</if>
+ 			<if test="status != null">#{status},</if>
+ 			<if test="createBy != null and createBy != ''">#{createBy},</if>
+ 			sysdate()
+ 		)
+	</insert>
+	
+	<update id="updateAppClazz" parameterType="AppClazz">
+ 		update base_app_clazz
+ 		<set>
+ 			<if test="parentId != null and parentId != 0">parent_id = #{parentId},</if>
+ 			<if test="clazzName != null and clazzName != ''">clazz_name = #{clazzName},</if>
+ 			<if test="ancestors != null and ancestors != ''">ancestors = #{ancestors},</if>
+ 			<if test="orderNum != null and orderNum != ''">order_num = #{orderNum},</if>
+ 			<if test="leader != null">leader = #{leader},</if>
+ 			<if test="phone != null">phone = #{phone},</if>
+ 			<if test="email != null">email = #{email},</if>
+ 			<if test="status != null and status != ''">status = #{status},</if>
+ 			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+ 			update_time = sysdate()
+ 		</set>
+ 		where app_clazz_id = #{appClazzId}
+	</update>
+	
+	<update id="updateAppClazzChildren" parameterType="java.util.List">
+	    update base_app_clazz set ancestors =
+	    <foreach collection="appClazzs" item="item" index="index"
+	        separator=" " open="case app_clazz_id" close="end">
+	        when #{item.appClazzId} then #{item.ancestors}
+	    </foreach>
+	    where app_clazz_id in
+	    <foreach collection="depts" item="item" index="index"
+	        separator="," open="(" close=")">
+	        #{item.appClazzId}
+	    </foreach>
+	</update>
+	 
+	<update id="updateAppClazzStatus" parameterType="AppClazz">
+ 	    update base_app_clazz
+ 	    <set>
+ 	        <if test="status != null and status != ''">status = #{status},</if>
+ 	        <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+ 	        update_time = sysdate()
+        </set>
+ 	    where app_clazz_id in (${ancestors})
+	</update>
+	
+	<delete id="deleteAppClazzById" parameterType="Long">
+		update base_app_clazz set del_flag = '2' where app_clazz_id = #{appClazzId}
+	</delete>
+
+</mapper> 

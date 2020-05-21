@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wey.ten.era.models.dao.IndustryModelDao">
+
+  <resultMap type="com.wey.ten.era.models.entity.IndustryModel" id="BaseResultMap">
+   		<id  column="id"  property="id" jdbcType="INTEGER"/>
+   		<result column="model_name"  property="modelName" jdbcType="VARCHAR"/>
+   		<result column="model_type"  property="modelType" jdbcType="INTEGER"/>
+   		<result column="user_id"  property="userId" jdbcType="INTEGER"/>
+   		<result column="classification_name"  property="classificationName" jdbcType="VARCHAR"/>
+   		<result column="model_version"  property="modelVersion" jdbcType="VARCHAR"/>
+   		<result column="Industry"  property="industry" jdbcType="INTEGER"/>
+   		<result column="product_introduction"  property="productIntroduction" jdbcType="VARCHAR"/>
+   		<result column="price_explanation"  property="priceExplanation" jdbcType="VARCHAR"/>
+   		<result column="touse_explanation"  property="touseExplanation" jdbcType="VARCHAR"/>
+   		<result column="is_toll"  property="isToll" jdbcType="INTEGER"/>
+   		<result column="price"  property="price" jdbcType="DOUBLE"/>
+   		<result column="price_type"  property="priceType" jdbcType="INTEGER"/>
+   		<result column="use_number"  property="useNumber" jdbcType="INTEGER"/>
+   		<result column="model_log_url"  property="modelLogUrl" jdbcType="VARCHAR"/>
+   		<result column="pageviews"  property="pageviews" jdbcType="BIGINT"/>
+   		<result column="model_status"  property="modelStatus" jdbcType="INTEGER"/>
+   		<result column="use_status"  property="useStatus" jdbcType="INTEGER"/>
+   		<result column="del"  property="del" jdbcType="INTEGER"/>
+   		<result column="create_time"  property="createTime" jdbcType="TIMESTAMP"/>
+   		<result column="update_time"  property="updateTime" jdbcType="TIMESTAMP"/>
+   		<result column="current_version"  property="currentVersion" jdbcType="INTEGER"/>
+  </resultMap>
+   
+  <sql id="baseColumn">
+    im.id,
+    im.model_name,
+    im.model_type,
+    im.user_id,
+    im.model_version,
+    im.Industry,
+    im.product_introduction,
+    im.price_explanation,
+    im.touse_explanation,
+    im.is_toll,
+    im.price,
+    im.price_type,
+    im.use_number,
+    im.model_log_url,
+    im.pageviews,
+    im.model_status,
+    im.use_status,
+    im.del,
+    im.create_time,
+    im.update_time,
+    im.current_version,
+    mc.classification_name
+  </sql>
+
+  <select id="detailIndustryModel" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    SELECT
+    <include refid="baseColumn"></include>
+    FROM industry_model_info im join model_classification_info mc on im.model_type=mc.classification_id
+    WHERE im.id=#{id}
+  </select>
+  
+  <select id="queryIndustryModel" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="baseColumn"></include>
+    FROM industry_model_info im join model_classification_info mc on im.model_type=mc.classification_id
+    WHERE model_status=0 and del=0 
+     <if test="e.enterprisType!=null and e.enterprisType!= '1'">
+        and use_status=1
+    </if>
+    <if test="e.modelName!=null">
+        and im.model_name like CONCAT('%',#{e.modelName},'%')
+    </if>
+    <if test="e.modelType!=null">
+        and im.model_type = #{e.modelType}
+    </if>
+    <if test="e.industry!=null">
+        and im.Industry=#{e.industry}
+    </if>
+    <if test="e.isToll!=null">
+        and im.is_toll=#{e.isToll}
+    </if>
+    <if test="e.useStatus!=null">
+        and im.use_status=#{e.useStatus}
+    </if>
+    <if test="e.userId!=null">
+        and im.user_id=#{e.userId}
+    </if>
+<!--      order by  -->
+<!--     <choose>   -->
+<!--            <when test="e.asc !=null and e.asc != '' ">   -->
+<!--                #{e.asc} -->
+<!--            </when>   -->
+<!--            <when test="e.desc !=null and e.desc != '' ">   -->
+<!--                #{e.desc} desc -->
+<!--            </when>    -->
+<!--            <otherwise>   -->
+<!--            		create_time desc -->
+<!--            </otherwise>   -->
+<!--      </choose> -->
+  </select>
+  
+  <select id="getCount" resultType="java.lang.Integer" parameterType="com.wey.ten.era.models.entity.IndustryModel">
+    SELECT
+    count(*)
+    FROM industry_model_info im 
+    WHERE model_status=0 and del=0
+    <if test="modelName!=null">
+        and model_name like CONCAT('%',#{modelName},'%')
+    </if>
+    <if test="modelType!=null">
+        and mode_type = #{modelType}
+    </if>
+    <if test="industry!=null">
+        and Industry=#{industry}
+    </if>
+    <if test="isToll!=null">
+        and is_toll=#{isToll}
+    </if>
+    <if test="useStatus!=null">
+        and use_status=#{useStatus}
+    </if>
+  
+  </select>
+  
+  <insert id="saveIndustryModel" parameterType="com.wey.ten.era.models.entity.IndustryModel">
+  	 insert into industry_model_info
+  	 (
+	    model_name,
+	    model_type,
+	    user_id,
+	    model_version,
+	    Industry,
+	    product_introduction,
+	    price_explanation,
+	    touse_explanation,
+	    is_toll,
+	    price,
+	    price_type,
+	    use_number,
+	    model_log_url,
+	    pageviews,
+	    model_status,
+	    use_status,
+	    del,
+	    create_time,
+	    update_time,
+	    current_version
+  	 )values(
+  	    #{modelName},
+  	    #{modelType},
+  	    #{userId},
+  	    #{modelVersion},
+  	    #{industry},
+  	    #{productIntroduction},
+  	    #{priceExplanation},
+  	    #{touseExplanation},
+  	    #{isToll},
+  	    #{price},
+  	    #{priceType},
+  	    #{useNumber},
+  	    #{modelLogUrl},
+  	    0,
+  	    0,
+  	    1,
+  	    0,
+  	    NOW(),
+  	    NOW(),
+  	    1
+  	 )
+  </insert>
+  
+  <update id="updateIndustryModel" parameterType="com.wey.ten.era.models.entity.IndustryModel">
+  	 update industry_model_info set 
+  	 <if test="modelName != null">model_name=#{modelName},</if>
+     <if test="modelType != null">model_type=#{modelType},</if>
+     <if test="industry != null">Industry=#{industry},</if>
+     <if test="productIntroduction != null">product_introduction=#{productIntroduction},</if>
+     <if test="modelVersion != null">model_version=#{modelVersion},</if>
+     <if test="priceExplanation != null">price_explanation=#{priceExplanation},</if>
+     <if test="touseExplanation != null">touse_explanation=#{touseExplanation},</if>
+     <if test="isToll != null">is_toll=#{isToll},</if>
+     <if test="price != null">price=#{price},</if>
+     <if test="priceType != null">price_type=#{priceType},</if>
+     <if test="useNumber != null">use_number=#{useNumber},</if>
+     <if test="modelLogUrl != null">model_log_url=#{modelLogUrl},</if>
+     <if test="modelStatus != null">model_status=#{modelStatus},</if>
+     <if test="useStatus != null">use_status=#{useStatus},</if>
+     update_time=NOW(),
+     current_version=current_version+1
+   where 
+     id=#{id}
+  </update>
+  
+  <delete id="delIndustryModel" parameterType="java.lang.Integer">
+  	delete from industry_model_info where id=#{id}
+  </delete>
+  
+  <update id="addPageviews" parameterType="map">
+  	update industry_model_info set pageviews=(pageviews+1) where id=#{id} and current_version=#{currentVersion}
+  </update>
+  
+  <update id="updateUseStatus" parameterType="map">
+  	update industry_model_info set use_status=#{useStatus} where id=#{id}
+  </update>
+</mapper>

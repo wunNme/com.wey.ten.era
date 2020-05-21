@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wey.ten.era.order.dao.OrderInfoDao">
+    
+    <resultMap type="com.wey.ten.era.order.entity.OrderInfo" id="OrderInfoResult">
+        <result property="id"    column="id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="buyerUserId"    column="buyer_user_id"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="orderTotalAmount"    column="order_total_amount"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectOrderInfoVo">
+        select id, order_id, buyer_user_id, order_status, order_total_amount, create_time, update_time from order_info
+    </sql>
+
+    <select id="selectOrderInfoList" resultMap="OrderInfoResult">
+        <include refid="selectOrderInfoVo"/>
+        <where>  
+            <if test="e.orderId != null  and orderId != ''"> and order_id = #{e.orderId}</if>
+            <if test="e.orderStatus != null "> and order_status = #{e.orderStatus}</if>
+        </where>
+<!--             order by  -->
+<!--     	<choose>   -->
+<!--            <when test="e.asc !=null and e.asc != '' ">   -->
+<!--                #{e.asc} -->
+<!--            </when>   -->
+<!--            <when test="e.desc !=null and e.desc != '' ">   -->
+<!--                #{e.desc} desc -->
+<!--            </when>    -->
+<!--            <otherwise>   -->
+<!--            		create_time desc -->
+<!--            </otherwise>   -->
+<!--      </choose> -->
+    </select>
+    
+    <select id="selectOrderInfoById" parameterType="Integer" resultMap="OrderInfoResult">
+        <include refid="selectOrderInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrderInfo" parameterType="com.wey.ten.era.order.entity.OrderInfo">
+        insert into order_info (
+            order_id,
+            buyer_user_id,
+            order_status,
+            order_total_amount,
+            create_time,
+            update_time
+            )
+        values(
+            #{orderId},
+            #{buyerUserId},
+            1,
+            #{orderTotalAmount},
+            now(),
+            now()
+         )
+    </insert>
+
+    <update id="updateOrderInfo" parameterType="com.wey.ten.era.order.entity.OrderInfo">
+        update order_info set
+            <if test="orderStatus != null ">order_status = #{orderStatus},</if>
+            update_time = now()
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderInfoById" parameterType="Integer">
+        delete from order_info where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderInfoByIds" parameterType="String">
+        delete from order_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

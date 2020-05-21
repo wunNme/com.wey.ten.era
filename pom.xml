@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.wey.ten.era</groupId>
+	<artifactId>com.wey.ten.era</artifactId>
+	<version>1.0-SNAPSHOT</version>
+
+	<modules>
+		<module>com.wey.ten.era.common</module>
+		<module>com.wey.ten.era.eureka</module>
+		<module>com.wey.ten.era.gateway</module>
+		<module>com.wey.ten.era.models</module>
+		<module>com.wey.ten.era.rbac</module>
+		<module>com.wey.ten.era.order</module>
+	</modules>
+
+	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.1.6.RELEASE</version>
+	</parent>
+
+	<properties>
+		<mysql-connector-java.version>5.1.47</mysql-connector-java.version>
+		<okhttp.version>3.4.1</okhttp.version>
+		<common-utils.version>1.0-SNAPSHOT</common-utils.version>
+		<common-model.version>1.0-SNAPSHOT</common-model.version>
+		<commons-lang3.version>3.8.1</commons-lang3.version>
+		<jackson-databind.version>2.9.7</jackson-databind.version>
+		<spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+		<easypoi.version>4.1.3</easypoi.version>
+		<mybatis-plus.version>3.0.6</mybatis-plus.version>
+	</properties>
+
+	<dependencies>
+		<!-- lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- easypoi -->
+			<dependency>
+				<groupId>cn.afterturn</groupId>
+				<artifactId>easypoi-base</artifactId>
+				<version>${easypoi.version}</version>
+			</dependency>
+			<!-- mybatis-plus -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus-boot-starter</artifactId>
+				<version>${mybatis-plus.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.squareup.okhttp3</groupId>
+				<artifactId>okhttp</artifactId>
+				<version>${okhttp.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.wey.ten.era.common</groupId>
+				<artifactId>com.wey.ten.era.common</artifactId>
+				<version>${common-utils.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3.version}</version>
+			</dependency>
+			<!-- fastjson -->
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson-databind.version}</version>
+			</dependency>
+			<!-- spring cloud -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger2</artifactId>
+				<version>2.9.2</version>
+			</dependency>
+			<!-- swagger UI 依赖 -->
+			<dependency>
+				<groupId>io.springfox</groupId>
+				<artifactId>springfox-swagger-ui</artifactId>
+				<version>2.9.2</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

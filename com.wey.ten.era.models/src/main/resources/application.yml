@@ -1,0 +1,38 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: com.wey.ten.era.models
+  profiles: 
+     active: dev
+  # 配置中心配置--------开始
+  cloud:
+    config:
+      name: era #文件前缀名称
+      profile: config-dev # 服务环境名称 例如 {name}-{profile} = exploit-config.yml
+      discovery:
+        enabled: true # 是否启用服务发现
+        service-id: com.wey.ten.era.config # 配置中心的服务id,即spring.application.name
+      username: user
+      password: password123
+mybatis:
+  type-aliases-package: com.wey.ten.era.application.**.entity
+  mapper-locations: classpath:mapper/**/*Mapper.xml
+  config-location: classpath:mapper/mybatis-config.xml
+  #configuration:
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+flyway:
+  baselineOnMigrate: true
+feign:
+  hystrix:
+    enabled: false
+mybatis-plus:
+    global-config:
+        db-config:
+            id-type: auto
+    mapper-locations: classpath:/mapper/*Mapper.xml
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://127.0.0.1:8761/eureka/
+logging.level.com.wey.ten.era.application.models.dao: debug

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wey.ten.era.application.models.dao.OnlineTestDao">
+
+  <resultMap type="com.wey.ten.era.application.models.entity.OnlineTest" id="BaseResultMap">
+   		<id  column="id"  property="id" jdbcType="INTEGER"/>
+   		<result column="online_model_name"  property="onlineModelName" jdbcType="VARCHAR"/>
+   		<result column="industry_model_id"  property="industryModelId" jdbcType="INTEGER"/>
+   		<result column="group_id"  property="groupId" jdbcType="INTEGER"/>
+   		<result column="interface_name"  property="interfaceName" jdbcType="VARCHAR"/>
+   		<result column="interface_explanation"  property="interfaceExplanaion" jdbcType="VARCHAR"/>
+   		<result column="access_address"  property="accessAdress" jdbcType="VARCHAR"/>
+   		<result column="request_type"  property="requestType" jdbcType="VARCHAR"/>
+   		<result column="protocol"  property="protocal" jdbcType="VARCHAR"/>
+   		<result column="encoding_format"  property="encodingFormat" jdbcType="VARCHAR"/>
+   		<result column="result_format"  property="resultFormat" jdbcType="VARCHAR"/>
+   		<result column="request_params"  property="requestParams" jdbcType="VARCHAR"/>
+   		<result column="result_data_structure"  property="resultDataStructure" jdbcType="VARCHAR"/>
+   		<result column="result_error_structure"  property="resultErrorStructure" jdbcType="VARCHAR"/>
+   		<result column="create_time"  property="createTime" jdbcType="TIMESTAMP"/>
+   		<result column="update_time"  property="updateTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+   
+  <sql id="baseColumn">
+    ot.id,
+    ot.online_model_name,
+    ot.industry_model_id,
+    ot.group_id,
+    ot.interface_name,
+    ot.interface_explanation,
+    ot.access_address,
+    ot.request_type,
+    ot.protocol,
+    ot.encoding_format,
+    ot.result_format,
+    ot.request_params,
+    ot.result_data_structure,
+    ot.result_error_structure,
+    ot.create_time,
+    ot.update_time
+  </sql>
+
+  <select id="detailOnlineTest" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    SELECT
+    <include refid="baseColumn"></include>
+    FROM online_test_info ot
+    WHERE ot.id=#{id}
+  </select>
+  
+  <select id="queryOnlineTest" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="baseColumn"></include>
+    FROM online_test_info ot
+    WHERE 1=1
+    <if test="e.onlineModelName!=null">
+        and ot.online_model_name like CONCAT('%',#{e.onlineModelName},'%')
+    </if>
+    <if test="e.interfaceName!=null">
+        and ot.interface_name like CONCAT('%',#{e.interfaceName},'%')
+    </if>
+    <if test="e.industryModelId!=null">
+        and ot.industry_model_id=#{e.industryModelId}
+    </if>
+    <if test="e.groupId!=null">
+        and ot.group_id=#{e.groupId}
+    </if>
+    <if test="e.requestType!=null">
+        and ot.request_type=#{e.requestType}
+    </if>
+<!--          order by  -->
+<!--     <choose>   -->
+<!--            <when test="e.asc !=null and e.asc != '' ">   -->
+<!--                #{e.asc} -->
+<!--            </when>   -->
+<!--            <when test="e.desc !=null and e.desc != '' ">   -->
+<!--                #{e.desc} desc -->
+<!--            </when>    -->
+<!--            <otherwise>   -->
+<!--            	create_time desc -->
+<!--            </otherwise>   -->
+<!--      </choose> -->
+  </select>
+  
+   <select id="getCount" resultType="java.lang.Integer" parameterType="com.wey.ten.era.application.models.entity.OnlineTest">
+    SELECT
+    count(*)
+    FROM online_test_info ot
+    WHERE 1=1
+    <if test="onlineModelName!=null">
+        and online_model_name like CONCAT('%',#{onlineModelName},'%')
+    </if>
+    <if test="interfaceName!=null">
+        and interface_name like CONCAT('%',#{interfaceName},'%')
+    </if>
+    <if test="industryModelId!=null">
+        and industry_model_id=#{industryModelId}
+    </if>
+    <if test="groupId!=null">
+        and group_id=#{groupId}
+    </if>
+    <if test="requestType!=null">
+        and request_type=#{requestType}
+    </if>
+  </select>
+  
+  <insert id="saveOnlineTest" parameterType="com.wey.ten.era.application.models.entity.OnlineTest">
+  	 insert into online_test_info
+  	 (
+	    online_model_name,
+	    industry_model_id,
+	    group_id,
+	    interface_name,
+	    interface_explanation,
+	    access_address,
+	    request_type,
+	    protocol,
+	    encoding_format,
+	    result_format,
+	    request_params,
+	    result_data_structure,
+	    result_error_structure,
+	    create_time,
+	    update_time
+  	 )values(
+  	    #{onlineModelName},
+  	    #{industryModelId},
+  	    #{groupId},
+  	    #{interfaceName},
+  	    #{interfaceExplanaion},
+  	    #{accessAdress},
+  	    #{requestType},
+  	    #{protocal},
+  	    #{encodingFormat},
+  	    #{resultFormat},
+  	    #{requestParams},
+  	    #{resultDataStructure},
+  	    #{resultErrorStructure},
+  	    NOW(),
+  	    NOW()
+  	 )
+  </insert>
+  
+  <update id="updateOnlineTest" parameterType="com.wey.ten.era.application.models.entity.OnlineTest">
+  	 update online_test_info set 
+  	 <if test="industryModelId != null">industry_model_id=#{industryModelId},</if>
+     <if test="onlineModelName != null">online_model_name=#{onlineModelName},</if>
+     <if test="interfaceName != null">interface_name=#{interfaceName},</if>
+     <if test="interfaceExplanaion != null">interface_explanation=#{interfaceExplanaion},</if>
+     <if test="accessAdress != null">access_address=#{accessAdress},</if>
+     <if test="requestType != null">request_type=#{requestType},</if>
+     <if test="protocal != null">protocol=#{protocal},</if>
+     <if test="encodingFormat != null">encoding_format=#{encodingFormat},</if>
+     <if test="resultFormat != null">result_format=#{resultFormat},</if>
+     <if test="requestParams != null">request_params=#{requestParams},</if>
+     <if test="resultDataStructure != null">result_data_structure=#{resultDataStructure},</if>
+     <if test="resultErrorStructure != null">result_error_structure=#{resultErrorStructure},</if>
+     update_time=NOW()
+   where 
+     id=#{id}
+  </update>
+  
+  <delete id="delOnlineTest" parameterType="java.lang.Integer">
+  	delete from online_test_info where id=#{id}
+  </delete>
+  
+</mapper>
