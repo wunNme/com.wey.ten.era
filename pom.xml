@@ -31,7 +31,7 @@
 		<common-utils.version>1.0-SNAPSHOT</common-utils.version>
 		<common-model.version>1.0-SNAPSHOT</common-model.version>
 		<commons-lang3.version>3.8.1</commons-lang3.version>
-		<jackson-databind.version>2.9.7</jackson-databind.version>
+		<jackson-databind.version>2.9.10.4</jackson-databind.version>
 		<spring-cloud.version>Greenwich.SR1</spring-cloud.version>
 		<easypoi.version>4.1.3</easypoi.version>
 		<mybatis-plus.version>3.0.6</mybatis-plus.version>
