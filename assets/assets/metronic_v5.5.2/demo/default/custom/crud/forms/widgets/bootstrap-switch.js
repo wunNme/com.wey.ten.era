@@ -1,1 +1,0 @@
-var BootstrapSwitch={init:function(){$("[baseClass-switch=true]").bootstrapSwitch()}};jQuery(document).ready(function(){BootstrapSwitch.init()});
